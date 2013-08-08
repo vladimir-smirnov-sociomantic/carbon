@@ -1,7 +1,7 @@
 Index: rollup.py
 ===================================================================
---- rollup.py	(revision 6419)
-+++ rollup.py	(revision 6501)
+--- plugins/maintenance/rollup.py	(revision 6419)
++++ plugins/maintenance/rollup.py	(revision 6501)
 @@ -53,10 +53,10 @@
  
  
