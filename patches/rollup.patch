@@ -1,0 +1,127 @@
+Index: rollup.py
+===================================================================
+--- rollup.py	(revision 6419)
++++ rollup.py	(revision 6501)
+@@ -53,10 +53,10 @@
+ 
+ 
+ def do_rollup(node, fineArchive, coarseArchive):
++  start_t = time.time()
+   overflowSlices = [s for s in fineArchive['slices'] if s.startTime < fineArchive['startTime']]
+   if not overflowSlices:
+     return
+-
+   if coarseArchive is None: # delete the old datapoints
+     for slice in overflowSlices:
+       try:
+@@ -65,10 +65,18 @@
+         pass
+ 
+   else:
++    # some profiling
++    time_stat = {}
++
++    start_t_tmp = time.time()
++    
+     overflowDatapoints = []
+     for slice in overflowSlices:
+       datapoints = slice.read(slice.startTime, fineArchive['startTime'])
+       overflowDatapoints.extend( list(datapoints) )
++    
++    time_stat['extended'] = time.time() - start_t_tmp
++    start_t_tmp = time.time()
+ 
+     overflowDatapoints.sort()
+     fineStep = fineArchive['precision']
+@@ -78,25 +86,52 @@
+     metadata = node.readMetadata()
+     xff = metadata.get('xFilesFactor')
+ 
++    time_stat['sorted'] = time.time() - start_t_tmp
++    start_t_tmp = time.time()
++
+     # We define a window corresponding to exactly one coarse datapoint
+     # Then we use it to select datapoints for aggregation
+-    for i in range(coarseArchive['retention']):
++
++    # oldest timestamp in overflowDatapoints array is start point for moving through retention
++    try:
++        oldest_ts = overflowDatapoints[0][0]
++    except:
++        oldest_ts =0
++    # calculate the start point for retentions
++    start_p = int((oldest_ts - coarseArchive['startTime'])/coarseStep)
++    
++    # profiling variables
++    start_count = 0
++    fine_dp = 0
++
++    for i in range(start_p, coarseArchive['retention']):
++    #for i in range(coarseArchive['retention']):
++      start_count += 1
++      start_t_in = time.time()
+       windowStart = coarseArchive['startTime'] + (i * coarseStep)
+       windowEnd = windowStart + coarseStep
+       fineDatapoints = [d for d in overflowDatapoints if d[0] >= windowStart and d[0] < windowEnd]
++      time_stat.setdefault(1, []).append(time.time() - start_t_in)
+ 
+       if fineDatapoints:
++        time_stat.setdefault(6, []).append(time.time() - start_t_in)
++        fine_dp += 1
++        start_t_in = time.time()
+         knownValues = [value for (timestamp,value) in fineDatapoints if value is not None]
+         if not knownValues:
+           continue
+         knownPercent = float(len(knownValues)) / len(fineDatapoints)
+         if knownPercent < xff:  # we don't have enough data to aggregate!
+           continue
++        time_stat.setdefault(2, []).append(time.time() - start_t_in)
++        start_t_in = time.time()
+         
+         coarseValue = aggregate(node, fineDatapoints)
+         coarseDatapoint = (windowStart, coarseValue)
+         fineValues = [d[1] for d in fineDatapoints]
+ 
++        time_stat.setdefault(3, []).append(time.time() - start_t_in)
++        start_t_in = time.time()
+         written = False
+         for slice in coarseArchive['slices']:
+           if slice.startTime <= windowStart and slice.endTime >= windowStart:
+@@ -104,6 +139,8 @@
+             written = True
+             break
+ 
++        time_stat.setdefault(4, []).append(time.time() - start_t_in)
++        start_t_in = time.time()
+           # We could pre-pend to an adjacent slice starting after windowStart
+           # but that would be much more expensive in terms of I/O operations.
+           # In the common case, append-only is best.
+@@ -113,10 +150,28 @@
+           newSlice.write([coarseDatapoint])
+           coarseArchive['slices'].append(newSlice)
+           deletePriorTo = min(deletePriorTo, windowStart)
++        time_stat.setdefault(5, []).append(time.time() - start_t_in)
+ 
++    time_stat['aggregated'] = time.time() - start_t_tmp
++    start_t_tmp = time.time()
+     # Delete the overflow from the fine archive
+     for slice in overflowSlices:
+       try:
+         slice.deleteBefore( deletePriorTo ) # start of most recent coarse datapoint
+       except SliceDeleted:
+         pass
++    time_stat['overflow_delete'] = time.time() - start_t_tmp
++    time_stat['all'] = time.time() - start_t
++
++    out = ""
++    keys = [1, 2, 3, 4, 5, 6, 'overflow_delete', 'extended', 'sorted', 'aggregated', 'all']
++    for k in keys:
++        if not time_stat.has_key(k): continue
++        v = time_stat[k]
++        if type(v) == list:
++            out = "%s, %s: %.3f" % (out, k, sum(v))
++        else:
++            out = "%s, %s: %.3f" % (out, k, v)
++    print "node: %s, profiling - cycles: %d, fine_dp: %d, %s" % (node.fsPath, start_count, fine_dp, out)
++
++
