@@ -231,7 +231,9 @@ if __name__ == '__main__':
   dispatcher = EventDispatcher()
 
   def dispatch(event, *args):
-    if options.verbose:
+    if event == 'maintenance_start' or event == 'maintenance_complete':
+      log("%s :: %s" % (event, args))
+    elif options.verbose:
       log("%s :: %s" % (event, args))
     dispatcher(event, *args)
 
