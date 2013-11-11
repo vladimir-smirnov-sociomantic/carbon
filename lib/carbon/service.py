@@ -117,7 +117,10 @@ def setupRelayProcessor(root_service, settings):
     router = ConsistentHashingRouter(settings.REPLICATION_FACTOR)
   elif settings.RELAY_METHOD == 'aggregated-consistent-hashing':
     from carbon.aggregator.rules import RuleManager
-    RuleManager.read_from(settings["aggregation-rules"])
+    aggregation_rules_path = join(settings.config_dir, "aggregation-rules.conf")
+    if not exists(aggregation_rules_path):
+      raise IOError(ENOENT, "%s file does not exist")
+    RuleManager.read_from(aggregation_rules_path)
     router = AggregatedConsistentHashingRouter(RuleManager, settings.REPLICATION_FACTOR)
   elif settings.RELAY_METHOD == 'relay-rules':
     router = RelayRulesRouter()
