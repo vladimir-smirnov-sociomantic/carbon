@@ -263,7 +263,7 @@ if __name__ == '__main__':
   # Begin walking the tree
   dispatch('maintenance_start', tree)
 
-  proc_pool = Pool(processes = 20)
+  proc_pool = Pool(processes = 4)
 
   for current_dir, subdirs, files in os.walk(options.root):
     for subdir in subdirs:

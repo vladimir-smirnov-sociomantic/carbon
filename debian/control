@@ -1,14 +1,15 @@
-Source: carbon
+Source: megacarbon
 Section: misc
 Priority: extra
-Maintainer: Kulikovsky Dmitry <dkulikovsky@yandex.ru>
+Maintainer: Anna Sysoeva <antrue@yandex-team.ru>
 Build-Depends: debhelper (>= 8.0.0), cdbs
 Standards-Version: 3.9.3
 Homepage: http://github.com/graphite-project/carbon.git
 
-Package: carbon
+Package: megacarbon
 Architecture: all
 XB-Python-Version: ${python:Versions}
 Depends: ${python:Depends}, ${misc:Depends},
-	python-mock , python-twisted, python-tz
-Description: backend for graphite
+	python-mock (>= 1.0.1), python-django, python-twisted, python-tz
+Description: Twisted daemon that listens for time-series data
+ Twisted daemon that listens for time-series data
