@@ -1,10 +1,17 @@
 import logging
 import time
 import json
-from ceres import CeresSlice, SliceDeleted, SliceGapTooLarge, NoData
+from carbon.conf import settings, read_writer_configs
+import ceres
 #######################################################
 # Put your custom aggregation logic in this function! #
 #######################################################
+
+read_writer_configs()
+try:
+  ceres.MAX_SLICE_GAP = int(settings['ceres']['MAX_SLICE_GAP'])
+except KeyError:
+  pass
 
 date = time.strftime("%Y-%m-%d %H:%M:%S")
 LOG = "/var/log/ceres_rollup/ceres_rollup.err"
@@ -129,7 +136,7 @@ def do_rollup(node, archives, xff, method):
         fineStat['slice_read']        += 1
         fineStat['slice_read_points'] += len(slicePoints)
       # no data in slice, just removing slice
-      except NoData:
+      except ceres.NoData:
         pass
 
       # dropping data, which aggregating right now
@@ -271,7 +278,7 @@ def do_rollup(node, archives, xff, method):
       rollupStat[slice.timeStep]['slice_delete']        += 1
       rollupStat[slice.timeStep]['slice_delete_points'] += (min(slice.endTime, deletePriorTo) - slice.startTime) / slice.timeStep
       slice.deleteBefore(deletePriorTo)
-    except SliceDeleted:
+    except ceres.SliceDeleted:
       pass
 
   logger.info("%s rollup stat: %s" % (str(node), json.dumps(rollupStat)))
@@ -289,7 +296,7 @@ def write_points(node, archive, points, slices, lastSlice, stat):
 
       stat['slice_update']        += 1
       stat['slice_update_points'] += len(points)
-    except SliceDeleted:
+    except ceres.SliceDeleted:
       pass
   # if not -- writing to lastSeenSlice with gap
   if not written and lastSlice:
@@ -299,11 +306,11 @@ def write_points(node, archive, points, slices, lastSlice, stat):
 
       stat['slice_write']        += 1
       stat['slice_write_points'] += len(points)
-    except (SliceDeleted,SliceGapTooLarge):
+    except (ceres.SliceDeleted,ceres.SliceGapTooLarge):
       pass
   # gap in last slice too large -- creating new slice
   if not written:
-    newSlice = CeresSlice.create(node, points[0][0], archive['precision'])
+    newSlice = ceres.CeresSlice.create(node, points[0][0], archive['precision'])
     newSlice.write(points)
     archive['slices'].append(newSlice)
     lastSlice = newSlice
