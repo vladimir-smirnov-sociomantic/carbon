@@ -1,3 +1,15 @@
+megacarbon (0.5.9.7) unstable; urgency=low
+
+  * rollup max slice gap fix 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Mon, 23 Dec 2013 20:57:16 +0400
+
+megacarbon (0.5.9.6) unstable; urgency=low
+
+  * added merge.py
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Mon, 23 Dec 2013 20:55:50 +0400
+
 megacarbon (0.5.9.5) unstable; urgency=low
 
   * removed install file  from debian 
