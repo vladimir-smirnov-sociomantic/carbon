@@ -5,3 +5,7 @@ dist
 *.pyc
 _trial_temp
 dropin.cache
+debian/files
+debian/megacarbon.substvars
+debian/megacarbon/
+debian/python-module-stampdir/

@@ -58,8 +58,8 @@ defaults = dict(
   USE_INSECURE_UNPICKLER=False,
 
   # db.conf
-  DATABASE='whisper',
-  LOCAL_DATA_DIR='/opt/graphite/storage/whisper',
+  DATABASE='ceres',
+  LOCAL_DATA_DIR='/var/lib/graphite/storage/ceres',
 
   # listeners.conf
   LISTENERS=[],
@@ -83,13 +83,13 @@ defaults = dict(
 
   # writer.conf
   MAX_CACHE_SIZE=2000000,
-  MAX_WRITES_PER_SECOND=600,
+  MAX_WRITES_PER_SECOND=1000,
   MAX_WRITES_PER_SECOND_SHUTDOWN=600,
-  MAX_CREATES_PER_MINUTE=50,
+  MAX_CREATES_PER_MINUTE=2000,
   LOG_WRITES=True,
   CACHE_QUERY_PORT=7002,
   CACHE_QUERY_INTERFACE='0.0.0.0',
-  WHITELISTS_DIR='/opt/graphite/storage/lists',
+  WHITELISTS_DIR='/var/lib/graphite/storage/lists',
   CACHE_DRAIN_STRATEGY='sorted',
 )
 

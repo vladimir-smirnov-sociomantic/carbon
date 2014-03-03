@@ -1,5 +1,125 @@
-carbon (0.10.0.a1) unstable; urgency=low
+megacarbon (0.5.10) unstable; urgency=low
 
-  * initial release
+  * fixed agg rules cache memory leak 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Fri, 10 Jan 2014 20:13:27 +0400
+
+megacarbon (0.5.9.7) unstable; urgency=low
+
+  * rollup max slice gap fix 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Mon, 23 Dec 2013 20:57:16 +0400
+
+megacarbon (0.5.9.6) unstable; urgency=low
+
+  * added merge.py
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Mon, 23 Dec 2013 20:55:50 +0400
+
+megacarbon (0.5.9.5) unstable; urgency=low
+
+  * removed install file  from debian 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 04 Dec 2013 21:53:22 +0400
+
+megacarbon (0.5.9.4) unstable; urgency=low
+
+  * fixed memory leak 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 04 Dec 2013 21:29:54 +0400
+
+megacarbon (0.5.9.3) unstable; urgency=low
+
+  * proc pool changed to 1
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Thu, 14 Nov 2013 03:25:48 +0400
+
+megacarbon (0.5.9.2) unstable; urgency=low
+
+  * changed proc_pool to 4 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Thu, 14 Nov 2013 02:48:43 +0400
+
+megacarbon (0.5.9.1) unstable; urgency=low
+
+  * fixed syn bug 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Mon, 11 Nov 2013 19:04:36 +0400
+
+megacarbon (0.5.9) precise; urgency=low
+
+  * fixed aggregation constant hashing
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Mon, 11 Nov 2013 18:21:11 +0400
+
+megacarbon (0.5.8) unstable; urgency=low
+
+  * few minor updates
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Thu, 24 Oct 2013 23:43:38 +0400
+
+megacarbon (0.5.7) unstable; urgency=low
+
+  * fixed deplist 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Mon, 16 Sep 2013 14:28:25 +0400
+
+megacarbon (0.5.6) unstable; urgency=low
+
+  * fixed replication
 
  -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Fri, 13 Sep 2013 14:37:14 +0400
+
+megacarbon (0.5.5) precise; urgency=low
+
+  * added lock option for maintenance proc
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Thu, 29 Aug 2013 19:04:15 +0400
+
+megacarbon (0.5.3) precise; urgency=low
+
+  * added some messages even not in verbose mode
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Mon, 26 Aug 2013 19:06:33 +0400
+
+megacarbon (0.5.2) precise; urgency=low
+
+  * removed plugins
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Fri, 02 Aug 2013 13:10:18 +0400
+
+megacarbon (0.5.1) precise; urgency=low
+
+  * apllied rollup patch
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Fri, 02 Aug 2013 12:59:58 +0400
+
+megacarbon (0.5) precise; urgency=low
+
+  * added multiproc in maintance
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Thu, 01 Aug 2013 18:41:12 +0400
+
+megacarbon (0.4) configs; urgency=low
+
+  * postinst added 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Tue, 23 Jul 2013 20:13:30 +0400
+
+megacarbon (0.3) configs; urgency=low
+
+  * mock dependency fixed 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Thu, 04 Jul 2013 22:20:25 +0400
+
+megacarbon (0.2) configs; urgency=low
+
+   * ceres maintenance plugins added 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Thu, 04 Jul 2013 18:05:38 +0400
+
+megacarbon (0.1) configs; urgency=low
+
+  * Initial Release.
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Thu, 04 Jul 2013 17:29:09 +0400
