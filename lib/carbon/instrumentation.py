@@ -16,6 +16,7 @@ PAGESIZE = os.sysconf('SC_PAGESIZE')
 # Module state
 metric_data = {}
 metric_data_lock = Lock()
+prior_data = {}
 custom_stats = {}
 counter_metrics = set([
   'metrics_received',
@@ -76,6 +77,12 @@ def append(metric, value):
   finally:
     metric_data_lock.release()
 
+def record_max(metric, value):
+  try:
+    if metric_data[metric] < value:
+      metric_data[metric] = value
+  except KeyError:
+    metric_data[metric] = value
 # end API
 
 

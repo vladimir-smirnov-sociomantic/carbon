@@ -21,9 +21,10 @@ import re
 from os.path import join, basename, dirname, normpath, exists, isdir
 from glob import glob
 
-from carbon.storage import StorageRule
-from carbon.database import TimeSeriesDatabase
 from carbon import log, util, state
+from carbon.database import TimeSeriesDatabase
+from carbon.exceptions import ConfigError
+from carbon.storage import StorageRule
 
 from twisted.python import usage
 
@@ -50,6 +51,7 @@ defaults = dict(
   AMQP_EXCHANGE='graphite',
   AMQP_METRIC_NAME_IN_BODY=False,
   AMQP_VERBOSE=False,
+  AMQP_SPEC='',
   BIND_PATTERNS='#',
 
   # daemon.conf
@@ -67,6 +69,7 @@ defaults = dict(
   # management.conf
   CARBON_METRIC_PREFIX='carbon',
   CARBON_METRIC_INTERVAL=60,
+  LOG_LISTENER_CONN_SUCCESS=True,
   ENABLE_MANHOLE=False,
   MANHOLE_INTERFACE='127.0.0.1',
   MANHOLE_PORT= 7022,
@@ -77,9 +80,15 @@ defaults = dict(
   DESTINATIONS=[],
   MAX_DATAPOINTS_PER_MESSAGE=500,
   MAX_QUEUE_SIZE=10000,
+  QUEUE_LOW_WATERMARK_PCT=0.8,
+  TIME_TO_DEFER_SENDING=0.0001,
   RELAY_METHOD='rules',
   REPLICATION_FACTOR=1,
   USE_FLOW_CONTROL=False,
+  MIN_RESET_STAT_FLOW=1000,
+  MIN_RESET_RATIO=0.9,
+  MIN_RESET_INTERVAL=121,
+  USE_RATIO_RESET=False,
 
   # writer.conf
   MAX_CACHE_SIZE=2000000,
@@ -233,20 +242,6 @@ settings = CarbonConfiguration()
 state.settings = settings
 
 
-class ConfigError(Exception):
-  def __init__(self, message, filename=None):
-    if filename:
-      self.message = "%s: %s" % (filename, message)
-    else:
-      self.message = message
-    self.filename = filename
-
-  def __repr__(self):
-    return '<ConfigError(%s)>' % self.message
-  __str__ = __repr__
-
-
-
 class CarbonDaemonOptions(usage.Options):
   optFlags = [
       ["debug", "", "Run in debug mode."],
@@ -298,6 +293,11 @@ class CarbonDaemonOptions(usage.Options):
         logdir = settings.LOG_DIR
         if not isdir(logdir):
           os.makedirs(logdir)
+          if settings.USER:
+            # We have not yet switched to the specified user,
+            # but that user must be able to create files in this
+            # directory.
+            os.chown(logdir, self.parent["uid"], self.parent["gid"])
         log.logToDir(logdir)
 
   def parseArgs(self, *args):
