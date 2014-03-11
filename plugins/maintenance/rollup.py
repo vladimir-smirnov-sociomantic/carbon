@@ -1,4 +1,6 @@
 import logging
+import glob
+import logging.handlers
 import time
 import json
 from carbon.conf import settings, read_writer_configs
@@ -17,11 +19,22 @@ date = time.strftime("%Y-%m-%d %H:%M:%S")
 LOG = "/var/log/ceres_rollup/ceres_rollup.err"
 logger = logging.getLogger("rollup")
 logger.setLevel(logging.INFO)
+
+needRoll = False
+if path.isfile(LOG):
+  needRoll = True
+
 fh = logging.FileHandler(LOG)
 fh.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s  %(message)s")
 fh.setFormatter(formatter)
 logger.addHandler(fh)
+
+if needRoll:
+  rotate = logging.handlers.RotatingFileHandler(LOG, backupCount=2)
+  logger.addHandler(rotate)
+  logger.handlers[1].doRollover()
+
 
 def aggregate(method, values):
   if method in ('avg', 'average'):
