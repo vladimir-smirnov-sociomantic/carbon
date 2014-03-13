@@ -1,3 +1,9 @@
+megacarbon (0.5.12) unstable; urgency=low
+
+  * fix some imports 
+
+ -- Anna Sysoeva <antrue@yandex-team.ru>  Thu, 13 Mar 2014 20:06:46 +0400
+
 megacarbon (0.5.11) unstable; urgency=low
 
   * rotating log on start 
