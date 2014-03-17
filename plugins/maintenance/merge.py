@@ -15,10 +15,11 @@ except KeyError:
 def node_found(node):
   metadata = node.readMetadata()
 
+  if not node.slices:
+    return
+
   slices = {}
-  for slice in node.slices:
-    if slice.timeStep == metadata['timeStep']:
-      continue
+  for slice in sorted(node.slices, key=lambda x: x.endTime)[:-1]:
     slices.setdefault(slice.timeStep, []).append(slice)
   do_merge(node, slices)
 
