@@ -1,3 +1,9 @@
+megacarbon (0.5.17) unstable; urgency=low
+
+  * fixed lockfile path 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 02 Apr 2014 22:39:21 +0400
+
 megacarbon (0.5.16) unstable; urgency=low
 
   * fixed script name 
