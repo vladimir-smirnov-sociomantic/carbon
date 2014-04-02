@@ -1,3 +1,9 @@
+megacarbon (0.5.14) unstable; urgency=low
+
+  * added simple rollup 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 02 Apr 2014 22:09:39 +0400
+
 megacarbon (0.5.13) unstable; urgency=low
 
   * some fixes in merge.py 
