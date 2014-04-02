@@ -1,9 +1,10 @@
 #!/usr/bin/python
-import sys, os, time
+import sys, os, time, posixfile
 from ceres import getTree
 from multiprocessing import Pool
 from os.path import join, exists
 
+lock_file = '/var/run/simple-rollup.lock'
 # Make carbon imports available for some functionality
 root_dir = "/var/lib/graphite"
 sys.path.append(join(root_dir, "plugins/maintenance"))
@@ -27,6 +28,29 @@ else:
   root = '/var/lib/graphite/storage/ceres'
 
 if __name__ == '__main__':
+  lock_timeout = 60
+  got_lock = 0
+  while lock_timeout:
+    try:
+      lock = posixfile.open(lock_file, 'w')
+      lock.lock('w')
+      got_lock = 1
+      break
+    except IOError, e:
+      if e[0] == 11:
+        lock_timeout = lock_timeout - 1 
+        time.sleep(1)
+      else:
+        print "can't get lock, reason: %s" % e[1]
+        sys.exit(1)
+    except:
+      print "failed to get lock for some unknown reason"
+      sys.exit(1)
+
+  if not got_lock:
+    print "Failed to get lock for 60s"
+    sys.exit(1)
+
   tree = getTree(root)
   if tree is None:
     print "%s is not inside a CeresTree" % root
