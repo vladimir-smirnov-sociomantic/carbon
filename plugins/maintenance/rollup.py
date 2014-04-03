@@ -55,6 +55,7 @@ def aggregate(method, values):
     return values[ len(values) / 2 ]
 
 def node_found(node):
+  startTime = time.time()
   archives = []
   t = int( time.time() )
   try:
@@ -74,9 +75,8 @@ def node_found(node):
       'slices'    : [s for s in node.slices if s.timeStep == precision]
     })
 
-  t = time.time()
-  do_rollup(node, archives, metadata.get('xFilesFactor'), metadata.get('aggregationMethod', 'avg'))
-  logger.info("%s rollup time: %.3f seconds" % (str(node), (time.time() - t)))
+  do_rollup(node, archives, float(metadata.get('xFilesFactor')), metadata.get('aggregationMethod', 'avg'))
+  logger.info("%s rollup time: %.3f seconds" % (str(node), (time.time() - startTime)))
 
 def do_rollup(node, archives, xff, method):
   # empty node?
