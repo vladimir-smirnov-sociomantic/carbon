@@ -4,7 +4,7 @@ from ceres import getTree
 from multiprocessing import Pool
 from os.path import join, exists
 
-lock_file = '/var/run/simple-rollup.lock'
+lock_file = '/var/tmp/simple-rollup.lock'
 # Make carbon imports available for some functionality
 root_dir = "/var/lib/graphite"
 sys.path.append(join(root_dir, "plugins/maintenance"))
