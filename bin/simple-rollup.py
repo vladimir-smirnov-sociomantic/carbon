@@ -59,7 +59,7 @@ if __name__ == '__main__':
   print "Starting rollup"
   nodes_found = 0
   exec_time = time.time()
-  proc_pool = Pool(processes = 32)
+  proc_pool = Pool(processes = 4)
   for current_dir, subdirs, files in os.walk(root):
     for subdir in subdirs:
       if subdir == '.ceres-tree':
