@@ -1,3 +1,9 @@
+megacarbon (0.5.20) unstable; urgency=low
+
+  * added cli options for simple-rollup.py 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Fri, 04 Apr 2014 19:12:34 +0400
+
 megacarbon (0.5.19) unstable; urgency=low
 
   * another one fix for rollup 
