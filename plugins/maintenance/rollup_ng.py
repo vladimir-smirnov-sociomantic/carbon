@@ -233,12 +233,13 @@ def do_rollup(node, archives, xff, method):
 
       # checking xff
       if float(len(values)) * fineStep / coarseStep < xff:
-        # writing previously found points if needed
-        lastSeenSlice = write_points(node, coarseArchive, writePoints, writeSlices, lastSeenSlice, coarseStat)
-        writePoints = []
-
-        fineStat['drop'] += 1
-        continue
+        if len(writePoints) > 0:
+          # writing previously found points if needed
+          lastSeenSlice = write_points(node, coarseArchive, writePoints, writeSlices, lastSeenSlice, coarseStat)
+          writePoints = []
+  
+          fineStat['drop'] += 1
+          continue
 
       newValue = aggregate(method, values)
       # in-memory aggregated point (writePoints is empty since timestamps processed in ascending order)
