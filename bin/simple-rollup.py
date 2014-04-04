@@ -3,6 +3,7 @@ import sys, os, time, posixfile
 from ceres import getTree
 from multiprocessing import Pool
 from os.path import join, exists
+from optparse import OptionParser
 
 lock_file = '/var/tmp/simple-rollup.lock'
 # Make carbon imports available for some functionality
@@ -22,10 +23,12 @@ from carbon.conf import settings, load_storage_rules
 settings.use_config_directory('/var/lib/graphite/conf/carbon-daemons/carbon-writer-st01')
 from rollup_ng import node_found
 
-if len(sys.argv) > 1:
-  root = sys.argv[1]
-else:
-  root = '/var/lib/graphite/storage/ceres'
+parser = OptionParser()
+parser.add_option('--root', default='/var/lib/graphite/storage/ceres/', help="Specify were to perform maintenance (default: /var/lib/graphite/storage/ceres/)")
+parser.add_option('--metric', help="Specify path to the metric you want to rollup")
+
+options, args = parser.parse_args()
+root = options.root
 
 if __name__ == '__main__':
   lock_timeout = 60
@@ -59,24 +62,26 @@ if __name__ == '__main__':
   print "Starting rollup"
   nodes_found = 0
   exec_time = time.time()
-  proc_pool = Pool(processes = 4)
-  for current_dir, subdirs, files in os.walk(root):
-    for subdir in subdirs:
-      if subdir == '.ceres-tree':
-        continue
-
-      path = join(current_dir, subdir)
-
-      if os.listdir(path):
-
-        if exists( join(path, '.ceres-node') ):
-          node_params = (path, root)	    
-          proc_pool.apply_async(node_found, (path, root,))
-          nodes_found += 1
-
-  proc_pool.close()
-  proc_pool.join()
-  print "found %s nodes" % nodes_found
+  if options.metric:
+    node_found(options.metric, root)
+  else:
+    proc_pool = Pool(processes = 4)
+    for current_dir, subdirs, files in os.walk(root):
+      for subdir in subdirs:
+        if subdir == '.ceres-tree':
+          continue
+  
+        path = join(current_dir, subdir)
+  
+        if os.listdir(path):
+  
+          if exists( join(path, '.ceres-node') ):
+            proc_pool.apply_async(node_found, (path, root,))
+            nodes_found += 1
+  
+    proc_pool.close()
+    proc_pool.join()
+    print "found %s nodes" % nodes_found
   print "All work is done"
   
 
