@@ -1,3 +1,27 @@
+megacarbon (0.5.17) unstable; urgency=low
+
+  * fixed lockfile path 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 02 Apr 2014 22:39:21 +0400
+
+megacarbon (0.5.16) unstable; urgency=low
+
+  * fixed script name 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 02 Apr 2014 22:35:52 +0400
+
+megacarbon (0.5.15) unstable; urgency=low
+
+  * added lock to simple-rollup 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 02 Apr 2014 22:25:09 +0400
+
+megacarbon (0.5.14) unstable; urgency=low
+
+  * added simple rollup 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Wed, 02 Apr 2014 22:09:39 +0400
+
 megacarbon (0.5.13) unstable; urgency=low
 
   * some fixes in merge.py 
