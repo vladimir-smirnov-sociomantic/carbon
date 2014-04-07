@@ -1,3 +1,9 @@
+megacarbon (0.5.21) unstable; urgency=low
+
+  * wrapped output to log_msg function 
+
+ -- Kulikovsky Dmitry <dkulikovsky@yandex-team.ru>  Mon, 07 Apr 2014 13:54:21 +0400
+
 megacarbon (0.5.20) unstable; urgency=low
 
   * added cli options for simple-rollup.py 
