@@ -6,7 +6,7 @@ from os.path import join, exists
 from optparse import OptionParser
 
 def log_msg(lvl, msg):
-    print "%s [%s] %s" % (time.ctime, lvl.lower(), msg)
+    print "%s [%s] %s" % (time.ctime(), lvl.lower(), msg)
 
 lock_file = '/var/tmp/simple-rollup.lock'
 # Make carbon imports available for some functionality
