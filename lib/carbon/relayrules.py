@@ -1,5 +1,6 @@
 import re
-from carbon.conf import settings, ConfigError
+from carbon.conf import settings
+from carbon.exceptions import ConfigError
 from carbon.util import parseDestinations
 
 
@@ -49,7 +50,7 @@ def loadRelayRules(config_file):
                                destinations=destinations)
 
   if not default_rule:
-    raise Exception("No default rule defined. You must specify exactly one "
+    raise ConfigError("No default rule defined. You must specify exactly one "
                     "rule with 'default = true' instead of a pattern.")
 
   rules.append(default_rule)

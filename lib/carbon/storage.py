@@ -16,6 +16,7 @@ import os, re
 
 from os.path import join, exists
 from carbon.util import pickle, parseRetentionDefs
+from carbon.exceptions import ConfigError
 
 
 class StorageRule(object):
@@ -26,7 +27,7 @@ class StorageRule(object):
     pattern = definition.pop('pattern', None)
     metric_list = definition.pop('list', None)
     if [match_all, pattern, metric_list].count(None) != 2:
-      raise Exception("Exactly one condition key must be provided: match-all"
+      raise ConfigError("Exactly one condition key must be provided: match-all"
                         " | pattern | list")
 
     if match_all:
@@ -77,3 +78,4 @@ class ListChecker(object):
         fh.close()
 
     return metric in self.members
+
