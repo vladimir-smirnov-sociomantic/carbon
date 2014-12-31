@@ -11,7 +11,10 @@ class CarbonDaemonServiceMaker(object):
   implements(IServiceMaker, IPlugin)
   tapname = "carbon-daemon"
   description = "Graphite's Backend"
-  options = conf.CarbonDaemonOptions
+  try:
+      options = conf.CarbonDaemonOptions
+  except AttributeError:
+      pass
 
   def makeService(self, options):
     """
