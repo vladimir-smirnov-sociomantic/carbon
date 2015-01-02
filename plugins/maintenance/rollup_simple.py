@@ -37,11 +37,10 @@ def aggregate_avg(values):
     :param values: list of values
     :return:
     """
-    length = len(values)
-    if length > 0:
-        return float(sum(values)) / len(values)
-    else:
+    l = len(values)
+    if l is 0:
         return float('nan')
+    return float(sum(values)) / len(values)
 
 
 def aggregate_median(values):
@@ -230,7 +229,6 @@ def do_rollup(log, node, archives, xff, method):
                     # Ceres reads points sorted asc, and we relay on them to be sorted dsc
                     # TODO: modify code to relay on points to be sorted ASC
                     new_points.reverse()
-#                    new_points = sorted(new_points, key=itemgetter(0), reverse=True)
                     retention_points.append(new_points)
             except ceres.NoData:
                 pass
@@ -363,7 +361,7 @@ def write_points(log, node, archive, points, slice_to_write, stat):
     if not points:
         return
 
-    log.debug("Writing points...")
+    log.debug("Writing points to slice %s...", slice_to_write)
     written = False
     # Writing to last_seen_slice with gap
     if slice_to_write:
@@ -381,6 +379,7 @@ def write_points(log, node, archive, points, slice_to_write, stat):
         log.debug("No slice found, creating new one: start_time=%i, precision=%i", points[0][0], archive['precision'])
         new_slice = ceres.CeresSlice.create(node, points[0][0], archive['precision'])
         new_slice.write(points)
+        log.debug("New slice created: %s", new_slice)
         archive['slices'].append(new_slice)
         # Keep slices sorted (dsc) by startTime, cause we rely on that in 'fit_points'
         archive['slices'] = sorted(archive['slices'], key=lambda x: x.startTime, reverse=True)

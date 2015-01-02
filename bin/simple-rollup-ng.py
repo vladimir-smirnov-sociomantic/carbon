@@ -10,9 +10,6 @@ import logging
 import time
 
 FORMAT = '%(asctime)-15s %(message)s'
-logging.basicConfig(level=logging.INFO,
-                    format=FORMAT)
-logger = logging.getLogger("rollup-main")
 
 parser = OptionParser()
 parser.add_option('--root', default='/var/lib/graphite/storage/ceres/',
@@ -29,6 +26,7 @@ parser.add_option('--metric',
 parser.add_option('--workers',
                   default=4,
                   help="Number of workers to run (default: 4)")
+parser.add_option('-d', action="store_true", default=False, dest="debug", help="Run with verbose logging")
 
 options, args = parser.parse_args()
 
@@ -37,6 +35,15 @@ lock_file = options.lock
 root_dir = options.graphiteroot
 sys.path.append(join(root_dir, "plugins/maintenance"))
 sys.path.append(join(root_dir, "lib"))
+
+if (options.debug):
+	logging.basicConfig(level=logging.DEBUG,
+	                    format=FORMAT)
+else:
+	logging.basicConfig(level=logging.INFO,
+	                    format=FORMAT)
+logger = logging.getLogger("rollup-main")
+
 
 try:
     from carbon.conf import settings
