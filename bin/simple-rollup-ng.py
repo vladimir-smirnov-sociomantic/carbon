@@ -93,8 +93,9 @@ if __name__ == '__main__':
     logger.info("Starting rollup")
     nodes_found = 0
     exec_time = time.time()
+    rollup_time = int(exec_time)
     if options.metric:
-        node_found(options.metric, root)
+        node_found(options.metric, root, rollup_time)
     else:
         proc_pool = Pool(processes=int(options.workers))
         for current_dir, subdirs, files in os.walk(root):
@@ -104,7 +105,7 @@ if __name__ == '__main__':
                 path = join(current_dir, subdir)
                 if os.listdir(path):
                     if exists(join(path, '.ceres-node')):
-                        proc_pool.apply_async(node_found, (path, root,))
+                        proc_pool.apply_async(node_found, (path, root, rollup_time,))
                         nodes_found += 1
         proc_pool.close()
         proc_pool.join()

@@ -94,7 +94,7 @@ def aggregate(method, values, new_step):
     return result
 
 
-def node_found(node_fs_path, root):
+def node_found(node_fs_path, root, rollup_time = None):
     """
     :param node_fs_path: node path
     :param root: Ceres Tree root
@@ -107,9 +107,13 @@ def node_found(node_fs_path, root):
                             format=FORMAT)
         logger = logging.getLogger("rollup-%i" % tid)
         logger.debug("initialized logfile '/srv/log/ceres_rollup_test/rollup-%i.log'" % tid)
+    # Used for stats
     start_time = time.time()
+
+    if not rollup_time:
+        rollup_time = int(start_time)
     archives = list()
-    t = int(start_time)
+    t = rollup_time
     tree_tmp = ceres.getTree(root)
     node_path = tree_tmp.getNodePath(node_fs_path)
     node = ceres.CeresNode(tree_tmp, node_path, node_fs_path)
